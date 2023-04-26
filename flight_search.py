@@ -3,6 +3,17 @@ import os
 import datetime
 import requests
 
+# -----------------------------------------------------
+#                   GLOBAL VALUES
+#      Replace these with your own information
+#     Note that some are environment variables
+# Please configure your environment variables properly
+# -----------------------------------------------------
+#        This document utilizes the following:
+#                  Tequila by Kiwi
+#                     Short.IO
+# -----------------------------------------------------
+
 FROM_LOCATION = "JFK"
 
 MIN_DATE = 30 #days
@@ -15,13 +26,20 @@ TEQUILA_HEADER = {
     "apikey": os.environ["TEQUILA_APIKEY"],
 }
 
-TINY_ENDPOINT = "https://api.short.io/links"
-TINY_HEADER = {
+SHORTY_ENDPOINT = "https://api.short.io/links"
+SHORTY_HEADER = {
     "authorization": os.environ["SHORT_IO"],
     "Content-Type": "application/json",
 }
+SHORTY_DOMAIN = "<DOMAIN>"
 
 EXCLUDE_AIRLINES = ""
+
+
+# -----------------
+# END GLOBAL VALUES
+# -----------------
+
 
 class FlightSearch:
     #This class is responsible for talking to the Flight Search API.
@@ -33,15 +51,13 @@ class FlightSearch:
     def search_engine(self, data:DataManager):
         # ------------------------
         # Format time for search
+        #       dd/mm/yyyy
         # ------------------------
         cur_date = datetime.date.today()
         travel_from = cur_date + datetime.timedelta(days=MIN_DATE)
         travel_from = travel_from.strftime("%d/%m/%Y")
         travel_to = cur_date + datetime.timedelta(days=MAX_DATE)
         travel_to = travel_to.strftime("%d/%m/%Y")
-        print(cur_date)
-        print(travel_from)
-        print(travel_to)
 
         # ---------------
         # Run the search
@@ -49,6 +65,7 @@ class FlightSearch:
         for location in data.flight_data['sheet1']:
             # ------------------------------------
             # Set up the parameters for the search
+            #  Dict will be passed as JSON to API
             # ------------------------------------
             search_param = {
                 "fly_from": FROM_LOCATION,
@@ -83,9 +100,9 @@ class FlightSearch:
                 "link": 0,
             }
             for result in search_res["data"]:
-                # --------------
-                # Construct data
-                # --------------
+                # --------------------------
+                # Construct data for FLIGHTS
+                # --------------------------
                 if int(result['price']) < cheap_flight['trip_price']:
                     if result["availability"]["seats"] is not None:
                         cheap_flight = {
@@ -104,23 +121,19 @@ class FlightSearch:
                         cheap_flight["date_from"] = str(cheap_flight["date_from"]).split("T")[0]
                         cheap_flight["date_to"] = str(cheap_flight["date_to"]).split("T")[0]
 
-            # -----------------
-            # Tiny URL for link
-            # -----------------
+            # ------------------
+            # Short URL for link
+            # ------------------
             if cheap_flight['link'] != 0:
-                tiny_param = {
-                    "domain": "l.cl4p-tp.com",
+                shorty_param = {
+                    "domain": SHORTY_DOMAIN,
                     "originalURL": cheap_flight["link"],
                 }
-                print(tiny_param)
-                tiny_response = requests.post(url=TINY_ENDPOINT, json=tiny_param, headers=TINY_HEADER)
-                print(tiny_response.text)
+                tiny_response = requests.post(url=SHORTY_ENDPOINT, json=shorty_param, headers=SHORTY_HEADER)
                 tiny_response.raise_for_status()
                 tiny_response_list = tiny_response.json()
                 cheap_flight["link"] = tiny_response_list['shortURL']
                 self.flight_results.append(cheap_flight)
-
-        print(self.flight_results)
 
 
 
