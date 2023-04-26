@@ -9,7 +9,7 @@ It only returns the lowest price.
 It then searches for hotels within a set distance of the airport you're landing at.
 If it finds a hotel stay in the same timeframe, it returns the hotel name and price.
 This program uses this information to send an automated SMS alert to the user.
-This link will include a link to book the flight, and general hotel information.
+This text message will include a link to book the flight, and general hotel information.
 
 SAMPLE OUTPUT
 
