@@ -12,13 +12,13 @@ This program uses this information to send an automated SMS alert to the user.
 This link will include a link to book the flight, and general hotel information.
 --------------------------
 SAMPLE OUTPUT
-# --------------------------
-#           PRICE ALERT!
-#           A round trip to Seattle is lower than your threshold!
-#           Price: $285 Per person
-#           2023-09-03 - 2023-09-12
-#           Book it:
-#           http://<URL-SHORTENER>.com/Kb68bN
-#           Need a room, too?
-#           Radisson Hotel Seattle Airport has a room for $734.40 for 2 adults.
-# --------------------------
+--------------------------
+           PRICE ALERT!
+           A round trip to Seattle is lower than your threshold!
+           Price: $285 Per person
+           2023-09-03 - 2023-09-12
+           Book it:
+           http://<URL-SHORTENER>.com/Kb68bN
+           Need a room, too?
+           Radisson Hotel Seattle Airport has a room for $734.40 for 2 adults.
+--------------------------
